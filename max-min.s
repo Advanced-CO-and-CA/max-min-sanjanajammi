@@ -24,39 +24,31 @@
 		For the given input data - r0 = 5, r1 = 4, r2 = 100*/
 _main:
       
-	   // Initialize registers
-      MOV r0, #0;          @ count    
-	   MOV r1, #0;          @ min value    
-	   MOV r2, #0;          @ max value    
+	   // Initialize total elements to 0 initially
+       MOV r0, #0;          @ count
 	   
-	   // Load first element, stop if the first element itself is 0
-      LDR r4, =data_items;
-	   LDR r3, [r4];	  
-	   CMP r3, #0;
-	   BEQ done;
-	   
-	   // Initialize min, max values to the first element initially
+	   // Load first element, Initialize min, max values to the first element initially
+	   LDR r4, =data_items;
+	   LDR r3, [r4];        @ loading the value to register r3 to avoid memory reads each time
 	   MOV r2, r3;          @ max value
 	   MOV r1, r3;          @ min value
 	   	
-      // Looping through all the elements in the list		  
-loop: ADD r4, r4, #4;
-      LDR r3, [r4];    
-      
-	   CMP r3, #0;    
-	   BEQ done;	        @ Break if 0 is encountered	  
+       // Looping through all the elements in the list 
+loop:  LDR r3, [r4], #4;
 	   
-	   ADD r0, r0, #1;      @ Increment counter 
-	   CMP r3, r1;    
+	   CMP r3, #0;
+	   BEQ done;	        @ Break if 0 is encountered
+	   
+	   ADD r0, r0, #1;      @ Increment counter
+	   CMP r3, r1;
 	   MOVMI r1, r3;        @ Set current element as the min value if it is lesser than the existing min element
-	  
-	   CMP r3, r2;    
+	   CMP r3, r2;
 	   MOVPL r2, r3;        @ Set current element as the max value if it is greater than the existing max element
 	   B loop;	            @ Repeat till 0 is encountered
-  
-      // Stop the pgm, store results in memory
-done: LDR r4, =count_total;
-	   STR r0, [r4];
+	   
+       // Stop the pgm, store results in memory
+done:  LDR r4, =count_total;
+       STR r0, [r4];
 	   LDR r4, =min_value;
 	   STR r1, [r4];
 	   LDR r4, =max_value;
