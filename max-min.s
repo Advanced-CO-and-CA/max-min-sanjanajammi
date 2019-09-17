@@ -5,13 +5,14 @@
 ******************************************************************************/
 @ BSS section
   .bss
+ 
+@ DATA SECTION
+  .data
+  data_items: .word 10, 4, 28, 100, 8, 0 ;@0 is used to terminate the data
   count_total : .word 9230
   min_value   : .word 9234
   max_value   : .word 9238
 
-@ DATA SECTION
-  .data
-  data_items: .word 10, 4, 28, 100, 8, 0 ;@0 is used to terminate the data
 
 @ TEXT section
   .text
@@ -25,7 +26,7 @@
 _main:
       
 	   // Initialize total elements to 0 initially
-       MOV r0, #0;          @ count
+	       MOV r0, #0;          @ count
 	   
 	   // Load first element, Initialize min, max values to the first element initially
 	   LDR r4, =data_items;
@@ -34,7 +35,7 @@ _main:
 	   MOV r1, r3;          @ min value
 	   	
        // Looping through all the elements in the list 
-loop:  LDR r3, [r4], #4;
+loop:      LDR r3, [r4], #4;
 	   
 	   CMP r3, #0;
 	   BEQ done;	        @ Break if 0 is encountered
@@ -47,8 +48,8 @@ loop:  LDR r3, [r4], #4;
 	   B loop;	            @ Repeat till 0 is encountered
 	   
        // Stop the pgm, store results in memory
-done:  LDR r4, =count_total;
-       STR r0, [r4];
+done:      LDR r4, =count_total;
+           STR r0, [r4];
 	   LDR r4, =min_value;
 	   STR r1, [r4];
 	   LDR r4, =max_value;
